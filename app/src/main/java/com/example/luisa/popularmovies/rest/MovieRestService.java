@@ -1,4 +1,4 @@
-package com.example.luisa.popularmovies.sync;
+package com.example.luisa.popularmovies.rest;
 
 import retrofit.http.GET;
 import retrofit.RestAdapter;

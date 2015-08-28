@@ -7,11 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.luisa.popularmovies.sync.MovieRequest;
-import com.example.luisa.popularmovies.sync.MovieRestService;
-
-import java.net.URL;
-import java.util.Objects;
+import com.example.luisa.popularmovies.core.DataAccessObject;
+import com.example.luisa.popularmovies.data.MoviesContract;
+import com.example.luisa.popularmovies.rest.MovieRequest;
+import com.example.luisa.popularmovies.rest.MovieRestService;
+import com.example.luisa.popularmovies.sync.MovieSyncAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new Test().execute();
-
     }
 
     @Override
@@ -28,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MovieSyncAdapter.syncImmediately(this);
     }
 
     @Override
@@ -55,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(MovieRequest object) {
             super.onPostExecute(object);
+            //DataAccessObject.bulkInsert(object.getResults());
+            getContentResolver().bulkInsert(MoviesContract.MovieEntry.CONTENT_URI, DataAccessObject.toContentValues(object.getResults()));
+
             if (object != null) {
                 Toast.makeText(MainActivity.this, "exito", Toast.LENGTH_SHORT);
             } else {
