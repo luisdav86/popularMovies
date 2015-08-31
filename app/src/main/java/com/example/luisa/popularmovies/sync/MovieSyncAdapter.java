@@ -15,7 +15,6 @@ import com.example.luisa.popularmovies.R;
 import com.example.luisa.popularmovies.Utility;
 import com.example.luisa.popularmovies.core.DataAccessObject;
 import com.example.luisa.popularmovies.data.MoviesContract;
-import com.example.luisa.popularmovies.entity.Movie;
 import com.example.luisa.popularmovies.rest.MovieRestService;
 
 /**

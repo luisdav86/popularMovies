@@ -1,7 +1,6 @@
 package com.example.luisa.popularmovies.entity;
 
 import com.example.luisa.popularmovies.core.BaseBusinessObject;
-import com.example.luisa.popularmovies.core.DataAccessObject;
 import com.example.luisa.popularmovies.core.DatabaseField;
 import com.example.luisa.popularmovies.core.DatabaseTable;
 import com.example.luisa.popularmovies.data.DBConstants;
@@ -37,6 +36,8 @@ public class Movie extends BaseBusinessObject {
     @DatabaseField(name = DBConstants.MovieColumns.RELEASE_DATE)
     @SerializedName(value = "release_date")
     private String releaseDate;
+
+
 
     public String getPopularity() {
         return popularity;
@@ -85,4 +86,5 @@ public class Movie extends BaseBusinessObject {
     public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
     }
+
 }
