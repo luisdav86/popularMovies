@@ -30,8 +30,23 @@ public class MoviesContract {
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIES;
 
-        public static Uri buildWeatherUri(long id) {
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIES;
+
+        public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildMovie() {
+            return CONTENT_URI.buildUpon().build();
+        }
+
+        public static Uri buildMovieWithId(long id) {
+            return CONTENT_URI.buildUpon().appendPath(Long.toString(id)).build();
+        }
+
+        public static long getIdFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(1));
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.luisa.popularmovies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +15,31 @@ import com.example.luisa.popularmovies.rest.MovieRequest;
 import com.example.luisa.popularmovies.rest.MovieRestService;
 import com.example.luisa.popularmovies.sync.MovieSyncAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieFragment.Callback {
+
+    private static final String DETAIL_FRAGMENT_TAG = "DFTAG";
+
+    private String mMovieOrder;
+
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mMovieOrder = Utility.getPreferredLocation(this);
+        if (findViewById(R.id.movie_detail_container) != null) {
+            mTwoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container, new MovieDetailFragment(), DETAIL_FRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
+        }
+
+        MovieSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -26,12 +47,6 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MovieSyncAdapter.syncImmediately(this);
     }
 
     @Override
@@ -43,31 +58,39 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public class Test extends AsyncTask<Void, Void, MovieRequest> {
-
-        @Override
-        protected MovieRequest doInBackground(Void... params) {
-            return MovieRestService.getMovies();
-        }
-
-        @Override
-        protected void onPostExecute(MovieRequest object) {
-            super.onPostExecute(object);
-            //DataAccessObject.bulkInsert(object.getResults());
-            getContentResolver().bulkInsert(MoviesContract.MovieEntry.CONTENT_URI, DataAccessObject.toContentValues(object.getResults()));
-
-            if (object != null) {
-                Toast.makeText(MainActivity.this, "exito", Toast.LENGTH_SHORT);
-            } else {
-                Toast.makeText(MainActivity.this, "mal", Toast.LENGTH_SHORT);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String movieOrder = Utility.getPreferredLocation(this);
+        // update the location in our second pane using the fragment manager
+        if (movieOrder != null && !movieOrder.equals(mMovieOrder)) {
+            MovieFragment ff = (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.movie_fragment);
+            if (null != ff) {
+                ff.onOrderMovieChanged();
             }
+            MovieDetailFragment df = (MovieDetailFragment) getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG);
+            if (null != df) {
+                df.onOrderMovieChanged("-1");
+            }
+            mMovieOrder = movieOrder;
+        }
+    }
 
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        if (mTwoPane) {
+
+        } else {
+            Intent intent = new Intent(this, MovieDetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
         }
     }
 }

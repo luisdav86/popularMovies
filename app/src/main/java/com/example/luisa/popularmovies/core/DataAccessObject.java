@@ -32,6 +32,14 @@ public class DataAccessObject {
     @Expose
     protected long id = DEFAULT_ID;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public static ICoreDb getHelper() {
         return MoviesApp.getInstance().getHelper();
     }
@@ -265,7 +273,7 @@ public class DataAccessObject {
         return list;
     }
 
-    private static <T extends DataAccessObject> T mapItem(Cursor cursor,
+    public static <T extends DataAccessObject> T mapItem(Cursor cursor,
                                                           Class<T> clasz) throws InstantiationException,
             IllegalAccessException {
         T item = null;

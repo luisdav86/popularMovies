@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import com.example.luisa.popularmovies.MoviesApp;
 import com.example.luisa.popularmovies.core.DataAccessObject;
 import com.example.luisa.popularmovies.entity.Movie;
 
@@ -22,11 +21,26 @@ public class MoviesProvider extends ContentProvider {
     private MoviesDbHelper mOpenHelper = null;
 
     static final int MOVIE = 100;
+    static final int MOVIE_WITH_ID = 101;
 
     @Override
     public boolean onCreate() {
         mOpenHelper = new MoviesDbHelper(getContext());
         return true;
+    }
+
+    private Cursor getMovieById(
+            Uri uri, String[] projection) {
+        long id = MoviesContract.MovieEntry.getIdFromUri(uri);
+
+        return mOpenHelper.getReadableDatabase().query(DBConstants.MOVIES_TABLE_NAME,
+                projection,
+                "_ID = ?",
+                new String[]{Long.toString(id)},
+                null,
+                null,
+                null
+        );
     }
 
     @Override
@@ -46,6 +60,9 @@ public class MoviesProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
+            case MOVIE_WITH_ID:
+                retCursor = getMovieById(uri, null);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -62,6 +79,8 @@ public class MoviesProvider extends ContentProvider {
         switch (match) {
             case MOVIE:
                 return MoviesContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_WITH_ID:
+                return MoviesContract.MovieEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -76,7 +95,7 @@ public class MoviesProvider extends ContentProvider {
             case MOVIE: {
                 long _id = DataAccessObject.insert(Movie.class, values);
                 if (_id > 0)
-                    returnUri = MoviesContract.MovieEntry.buildWeatherUri(_id);
+                    returnUri = MoviesContract.MovieEntry.buildMovieUri(_id);
                 else
                     throw new android.database.SQLException("Failed to bulkInsert row into " + uri);
                 break;
@@ -147,6 +166,7 @@ public class MoviesProvider extends ContentProvider {
         final String authority = MoviesContract.CONTENT_AUTHORITY;
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, MoviesContract.PATH_MOVIES, MOVIE);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/*", MOVIE_WITH_ID);
         return matcher;
     }
 

@@ -10,6 +10,7 @@ public class DBConstants {
     public static final String MOVIES_TABLE_NAME = "movies";
 
     public interface MovieColumns extends BaseColumns {
+        String POPULARITY = "popularity";
         String ORIGINAL_TITLE = "original_title";
         String POSTER_PATH = "poster_path";
         String OVERVIEW = "overview";

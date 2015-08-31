@@ -18,6 +18,10 @@ public class Movie extends BaseBusinessObject {
     @SerializedName(value = "original_title")
     private String originalTitle;
 
+    @DatabaseField(name = DBConstants.MovieColumns.POPULARITY)
+    @SerializedName(value = "popularity")
+    private String popularity;
+
     @DatabaseField(name = DBConstants.MovieColumns.POSTER_PATH)
     @SerializedName(value = "poster_path")
     private String posterPath;
@@ -28,11 +32,19 @@ public class Movie extends BaseBusinessObject {
 
     @DatabaseField(name = DBConstants.MovieColumns.VOTE_AVERAGE)
     @SerializedName(value = "vote_average")
-    private double voteAverage;
+    private float voteAverage;
 
     @DatabaseField(name = DBConstants.MovieColumns.RELEASE_DATE)
     @SerializedName(value = "release_date")
     private String releaseDate;
+
+    public String getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(String popularity) {
+        this.popularity = popularity;
+    }
 
     public String getReleaseDate() {
         return releaseDate;
@@ -66,11 +78,11 @@ public class Movie extends BaseBusinessObject {
         this.overview = overview;
     }
 
-    public double getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(double voteAverage) {
+    public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
     }
 }
