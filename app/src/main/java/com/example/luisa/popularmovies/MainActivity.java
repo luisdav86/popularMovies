@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             }
             MovieDetailFragment df = (MovieDetailFragment) getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG);
             if (null != df) {
-                df.onOrderMovieChanged("-1");
+                df.onOrderMovieChanged();
             }
             mMovieOrder = movieOrder;
         }
@@ -86,7 +86,18 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
     @Override
     public void onItemSelected(Uri contentUri) {
         if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetailFragment.DETAIL_URI, contentUri);
 
+            MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment, DETAIL_FRAGMENT_TAG)
+                    .commit();
         } else {
             Intent intent = new Intent(this, MovieDetailActivity.class)
                     .setData(contentUri);

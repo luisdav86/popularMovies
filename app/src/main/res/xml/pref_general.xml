@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ListPreference
-        android:defaultValue="@string/pref_movie_order"
+        android:defaultValue="@string/pref_movie_popular"
         android:entries="@array/pref_movies_options"
         android:entryValues="@array/pref_movie_values"
         android:key="@string/pref_movie_key"

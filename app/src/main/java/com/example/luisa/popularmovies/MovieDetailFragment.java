@@ -15,11 +15,16 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.luisa.popularmovies.core.DataAccessObject;
+import com.example.luisa.popularmovies.core.LogIt;
 import com.example.luisa.popularmovies.data.MoviesContract;
 import com.example.luisa.popularmovies.entity.Movie;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MovieDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -86,7 +91,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
         return null;
     }
 
-    void onOrderMovieChanged(String newLocation) {
+    void onOrderMovieChanged() {
         Uri uri = mUri;
         if (null != uri) {
             long id = MoviesContract.MovieEntry.getIdFromUri(uri);
@@ -102,19 +107,40 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             try {
                 Movie movie = DataAccessObject.mapItem(data, Movie.class);
                 this.title.setText(movie.getOriginalTitle());
-                this.average.setRating(movie.getVoteAverage()/2F);
+                this.average.setRating(movie.getVoteAverage() / 2F);
                 this.overview.setText(movie.getOverview());
-                this.releaseDate.setText(movie.getReleaseDate());
-                Picasso.with(this.getActivity()).load("http://image.tmdb.org/t/p/" + "w185" + movie.getPosterPath())
+                this.releaseDate.setText(formateDateFromstring("yyyy-MM-dd", "dd, MMM yyyy", movie.getReleaseDate()));
+
+                Picasso.with(this.getActivity()).load(getString(R.string.images_url) + getString(R.string.images_size) + movie.getPosterPath())
                         .fit()
                         .centerCrop()
                         .into(this.thumbail);
             } catch (java.lang.InstantiationException e) {
-                e.printStackTrace();
+                LogIt.e(this, e, e.getMessage());
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                LogIt.e(this, e, e.getMessage());
             }
         }
+    }
+
+    public static String formateDateFromstring(String inputFormat, String outputFormat, String inputDate) {
+
+        Date parsed = null;
+        String outputDate = "";
+
+        SimpleDateFormat df_input = new SimpleDateFormat(inputFormat, java.util.Locale.getDefault());
+        SimpleDateFormat df_output = new SimpleDateFormat(outputFormat, java.util.Locale.getDefault());
+
+        try {
+            parsed = df_input.parse(inputDate);
+            outputDate = df_output.format(parsed);
+
+        } catch (ParseException e) {
+            LogIt.e(e, e, e.getMessage());
+        }
+
+        return outputDate;
+
     }
 
     @Override

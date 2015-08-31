@@ -34,7 +34,8 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        getContext().getContentResolver().bulkInsert(MoviesContract.MovieEntry.CONTENT_URI, DataAccessObject.toContentValues(MovieRestService.getMovies(Utility.getPreferredLocation(getContext())).getResults()));
+        getContext().getContentResolver().bulkInsert(MoviesContract.MovieEntry.CONTENT_URI
+                , DataAccessObject.toContentValues(MovieRestService.getMovies(Utility.getPreferredLocation(getContext()), getContext().getString(R.string.apy_key)).getResults()));
     }
 
     public static void syncImmediately(Context context) {

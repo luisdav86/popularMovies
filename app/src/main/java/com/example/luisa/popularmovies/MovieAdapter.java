@@ -43,7 +43,7 @@ public class MovieAdapter extends CursorAdapter {
             Movie movie = DataAccessObject.mapItem(cursor, Movie.class);
             viewHolder.title.setText(movie.getOriginalTitle());
             viewHolder.rating.setRating(movie.getVoteAverage() / 2.0F);
-            Picasso.with(context).load("http://image.tmdb.org/t/p/" + "w185" + movie.getPosterPath()).into(viewHolder.imageView);
+            Picasso.with(context).load(context.getString(R.string.images_url) + context.getString(R.string.images_size) + movie.getPosterPath()).fit().centerCrop().into(viewHolder.imageView);
         } catch (InstantiationException e) {
             LogIt.e(this, e, e.getMessage());
         } catch (IllegalAccessException e) {

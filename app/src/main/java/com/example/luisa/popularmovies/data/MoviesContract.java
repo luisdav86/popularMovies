@@ -49,4 +49,5 @@ public class MoviesContract {
             return Long.parseLong(uri.getPathSegments().get(1));
         }
     }
+
 }
