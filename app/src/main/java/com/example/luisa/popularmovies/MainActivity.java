@@ -2,17 +2,13 @@ package com.example.luisa.popularmovies;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.luisa.popularmovies.core.DataAccessObject;
-import com.example.luisa.popularmovies.data.MoviesContract;
-import com.example.luisa.popularmovies.rest.MovieRequest;
-import com.example.luisa.popularmovies.rest.MovieRestService;
 import com.example.luisa.popularmovies.sync.MovieSyncAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieFragment.Callback {
@@ -27,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mMovieOrder = Utility.getPreferredLocation(this);
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
             if (savedInstanceState == null) {
@@ -40,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
         }
 
         MovieSyncAdapter.initializeSyncAdapter(this);
+        MovieSyncAdapter.syncImmediately(this);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
         String movieOrder = Utility.getPreferredLocation(this);
         // update the location in our second pane using the fragment manager
         if (movieOrder != null && !movieOrder.equals(mMovieOrder)) {
-            MovieFragment ff = (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.movie_fragment);
+            MovieFragment ff = (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_movie);
             if (null != ff) {
                 ff.onOrderMovieChanged();
             }
@@ -89,6 +85,21 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
+            this.contentUri = contentUri;
+            handler.handleMessage(null);
+
+        } else {
+            Intent intent = new Intent(this, MovieDetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
+        }
+    }
+
+    private Uri contentUri;
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
             Bundle args = new Bundle();
             args.putParcelable(MovieDetailFragment.DETAIL_URI, contentUri);
 
@@ -98,10 +109,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container, fragment, DETAIL_FRAGMENT_TAG)
                     .commit();
-        } else {
-            Intent intent = new Intent(this, MovieDetailActivity.class)
-                    .setData(contentUri);
-            startActivity(intent);
+
         }
-    }
+    };
 }

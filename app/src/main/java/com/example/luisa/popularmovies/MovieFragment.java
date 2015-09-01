@@ -127,8 +127,22 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
             mGridView.smoothScrollToPosition(mPosition);
+        } else {
+            final Cursor movieCursor = (Cursor) mMovieAdapter.getItem(0);
+            if (movieCursor != null && movieCursor.getCount() > 0) {
+               /* try {
+                   /* ((Callback) getActivity())
+                            .onItemSelected(MoviesContract.MovieEntry.buildMovieWithId(DataAccessObject.mapItem(movieCursor, Movie.class).getId()));
+                } catch (java.lang.InstantiationException e) {
+                    LogIt.e(this, e, e.getMessage());
+                } catch (IllegalAccessException e) {
+                    LogIt.e(this, e, e.getMessage());
+                }*/
+            }
         }
     }
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
