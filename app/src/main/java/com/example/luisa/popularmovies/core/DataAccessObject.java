@@ -27,19 +27,6 @@ public class DataAccessObject {
 
     private static SQLiteDatabase db = null;
 
-    @DatabaseField(name = BaseColumns._ID, primaryKey = true, autoincrement = true)
-    @SerializedName("id")
-    @Expose
-    protected long id = DEFAULT_ID;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public static ICoreDb getHelper() {
         return MoviesApp.getInstance().getHelper();
     }
@@ -139,10 +126,8 @@ public class DataAccessObject {
                     .getAnnotation(DatabaseField.class);
             if (databaseField != null) {
                 try {
-                    if (!field.getName().equals("id") || id != DEFAULT_ID) {
-                        field.setAccessible(true);
-                        bindFieldValue(contentValues, databaseField, field);
-                    }
+                    field.setAccessible(true);
+                    bindFieldValue(contentValues, databaseField, field);
                 } catch (IllegalArgumentException e) {
                     LogIt.e(this, e, e.getMessage());
                 } catch (IllegalAccessException e) {
@@ -274,7 +259,7 @@ public class DataAccessObject {
     }
 
     public static <T extends DataAccessObject> T mapItem(Cursor cursor,
-                                                          Class<T> clasz) throws InstantiationException,
+                                                         Class<T> clasz) throws InstantiationException,
             IllegalAccessException {
         T item = null;
         item = clasz.newInstance();

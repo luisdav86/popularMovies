@@ -24,8 +24,7 @@ public class MovieRestService {
     private static interface IMovies {
         @GET(API_FIELDS)
         MovieRequest getMovies(@Query("sort_by") String sortBy, @Query("api_key") String apyKey);
-
-        //http://api.themoviedb.org/3/movie/44947/reviews??api_key=1a6321ee87822a379dbf9f8f2c37107e
+        
         //http://api.themoviedb.org/3/movie/44947/reviews?&api_key=1a6321ee87822a379dbf9f8f2c37107e
         @GET(API_REVIEW_FIELDS)
         Object getReviews(@Path("id") String id, @Query("api_key") String apyKey);

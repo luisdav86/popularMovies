@@ -1,9 +1,13 @@
 package com.example.luisa.popularmovies.entity;
 
+import android.provider.BaseColumns;
+
 import com.example.luisa.popularmovies.core.BaseBusinessObject;
 import com.example.luisa.popularmovies.core.DatabaseField;
 import com.example.luisa.popularmovies.core.DatabaseTable;
 import com.example.luisa.popularmovies.data.DBConstants;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by LuisA on 8/31/2015.
@@ -11,12 +15,28 @@ import com.example.luisa.popularmovies.data.DBConstants;
 @DatabaseTable(name = DBConstants.MOVIES_TABLE_NAME)
 public class Review extends BaseBusinessObject {
 
+    @DatabaseField(name = BaseColumns._ID, primaryKey = true)
+    @SerializedName("id")
+    @Expose
+    protected String id = "";
+
     @DatabaseField(name = DBConstants.ReviewColumns.MOVIE_ID)
     private String movieId;
+
     @DatabaseField(name = DBConstants.ReviewColumns.AUTHOR)
     private String author;
+
     @DatabaseField(name = DBConstants.ReviewColumns.CONTENT)
     private String content;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getMovieId() {
         return movieId;

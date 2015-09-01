@@ -9,21 +9,17 @@ import java.util.List;
 /**
  * Created by LuisA on 8/28/2015.
  */
-public class BaseBusinessObject extends DataAccessObject{
+public class BaseBusinessObject extends DataAccessObject {
 
     public BaseBusinessObject() {
 
     }
 
-    public BaseBusinessObject(long id) {
-        this.id = id;
-    }
-
-    public List<? extends BaseBusinessObject> findAll(){
+    public List<? extends BaseBusinessObject> findAll() {
         return DataAccessObject.findAll(this.getClass());
     }
 
-    public String[] getEntityProjection(){
+    public String[] getEntityProjection() {
         return null;
     }
 
