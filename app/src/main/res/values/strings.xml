@@ -26,6 +26,8 @@
 
     <string name="pref_movie_key" translatable="false">MovieOrder</string>
 
+    <string name="pref_first_sync" translatable="false">FirstSync</string>
+
     <!-- Key name for temperature unit preference in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_movie_popular" translatable="false">popular</string>
 

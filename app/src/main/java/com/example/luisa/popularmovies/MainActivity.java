@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mMovieOrder = Utility.getPreferredLocation(this);
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
             if (savedInstanceState == null) {
@@ -40,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
         }
 
         MovieSyncAdapter.initializeSyncAdapter(this);
+        if (Utility.getPreferredFirstSync(this)) {
+            MovieSyncAdapter.syncImmediately(this);
+            Utility.putPreferredFirstSync(this, true);
+        }
     }
 
     @Override
@@ -68,10 +71,11 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
     @Override
     protected void onResume() {
         super.onResume();
+
         String movieOrder = Utility.getPreferredLocation(this);
         // update the location in our second pane using the fragment manager
         if (movieOrder != null && !movieOrder.equals(mMovieOrder)) {
-            MovieFragment ff = (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.movie_fragment);
+            MovieFragment ff = (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_movie);
             if (null != ff) {
                 ff.onOrderMovieChanged();
             }
