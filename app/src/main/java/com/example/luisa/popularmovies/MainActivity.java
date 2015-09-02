@@ -2,17 +2,11 @@ package com.example.luisa.popularmovies;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.luisa.popularmovies.core.DataAccessObject;
-import com.example.luisa.popularmovies.data.MoviesContract;
-import com.example.luisa.popularmovies.rest.MovieRequest;
-import com.example.luisa.popularmovies.rest.MovieRestService;
 import com.example.luisa.popularmovies.sync.MovieSyncAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieFragment.Callback {
@@ -39,10 +33,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
         }
 
         MovieSyncAdapter.initializeSyncAdapter(this);
-        if (Utility.getPreferredFirstSync(this)) {
-            MovieSyncAdapter.syncImmediately(this);
-            Utility.putPreferredFirstSync(this, true);
-        }
     }
 
     @Override

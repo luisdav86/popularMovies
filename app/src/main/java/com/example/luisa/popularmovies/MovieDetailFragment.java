@@ -20,8 +20,6 @@ import com.example.luisa.popularmovies.data.MoviesContract;
 import com.example.luisa.popularmovies.entity.Movie;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -107,6 +105,8 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
             try {
                 Movie movie = DataAccessObject.mapItem(data, Movie.class);
                 this.title.setText(movie.getOriginalTitle());
+                this.average.setVisibility(View.VISIBLE);
+                this.average.setNumStars(5);
                 this.average.setRating(movie.getVoteAverage() / 2F);
                 this.overview.setText(movie.getOverview());
                 this.releaseDate.setText(formateDateFromstring("yyyy-MM-dd", "dd, MMM yyyy", movie.getReleaseDate()));
